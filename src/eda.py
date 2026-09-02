@@ -1,11 +1,3 @@
-"""
-eda.py
-======
-Quick exploratory analysis on the FIRMS hotspot CSV produced by fetch_firms.py.
-
-Run:  python src/eda.py --input data/firms_kalimantan_raw.csv --outdir data/plots
-"""
-
 import argparse
 import os
 

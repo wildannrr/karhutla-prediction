@@ -1,13 +1,3 @@
-"""
-diagnose_unknown.py
-====================
-Quick diagnostic: shows the lat/lon range of hotspots that didn't match any
-province bounding box, so we can tighten up config.PROVINCE_BBOXES with real
-numbers instead of guessing.
-
-Run:  python src/diagnose_unknown.py --input data/firms_kalimantan_2026_combined.csv
-"""
-
 import argparse
 import pandas as pd
 
