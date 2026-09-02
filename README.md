@@ -4,11 +4,9 @@ Project data science/ML untuk memahami dan mendeteksi kebakaran hutan dan
 lahan (karhutla) di Kalimantan tahun 2026, menggabungkan data hotspot
 satelit (NASA FIRMS) dengan deteksi perubahan lahan dari citra Sentinel-2.
 
-**Status:** Tahap 1 & 2 selesai ✅ | Tahap 3 & 4 (prediksi ML) direncanakan
-
 ---
 
-## Ringkasan hasil utama
+## Hasil
 
 - **~253.000 titik hotspot** terdeteksi di Kalimantan sepanjang Jan-Agu 2026
   (NASA FIRMS, gabungan sensor VIIRS & MODIS).
@@ -35,28 +33,28 @@ karhutla-prediction/
 ├── requirements.txt
 ├── src/
 │   ├── config.py                  # bounding box, konstanta API
-│   ├── fetch_firms.py             # Tahap 1: narik data hotspot FIRMS
-│   ├── diagnose_unknown.py        # Tahap 1: diagnostik kategorisasi provinsi
-│   ├── eda.py                     # Tahap 1: analisis & visualisasi hotspot
-│   ├── gee_utils.py                # Tahap 2: fungsi Earth Engine bersama
-│   ├── select_case_study.py       # Tahap 2: pilih AOI & tanggal studi kasus
-│   ├── burn_detection.py          # Tahap 2: deteksi burn scar (dNBR)
-│   └── validate_with_hotspots.py  # Tahap 2: validasi silang FIRMS x Sentinel-2
-└── data/                          # hasil fetch & output (tidak di-commit)
+│   ├── fetch_firms.py             # 1: narik data hotspot FIRMS
+│   ├── diagnose_unknown.py        # 1: diagnostik kategorisasi provinsi
+│   ├── eda.py                     # 1: analisis & visualisasi hotspot
+│   ├── gee_utils.py               # 2: fungsi Earth Engine bersama
+│   ├── select_case_study.py       # 2: pilih AOI & tanggal studi kasus
+│   ├── burn_detection.py          # 2: deteksi burn scar (dNBR)
+│   └── validate_with_hotspots.py  # 2: validasi silang FIRMS x Sentinel-2
+└── data/                          # hasil fetch & output
 ```
 
 ---
 
-## Tahap 1: Data Pipeline Hotspot (NASA FIRMS)
+## 1: Data Pipeline Hotspot (NASA FIRMS)
 
 ### Setup
 
-1. **Dapatkan FIRMS MAP_KEY gratis**: https://firms.modaps.eosdis.nasa.gov/api/map_key/
-2. **Set sebagai environment variable:**
+1. **FIRMS MAP_KEY**: https://firms.modaps.eosdis.nasa.gov/api/map_key/
+2. **Set environment :**
    ```bash
    export FIRMS_MAP_KEY="your_map_key_here"      # macOS/Linux/Git Bash
-   set FIRMS_MAP_KEY=your_map_key_here            # Windows CMD
-   $env:FIRMS_MAP_KEY="your_map_key_here"         # Windows PowerShell
+   set FIRMS_MAP_KEY=your_map_key_here            # CMD
+   $env:FIRMS_MAP_KEY="your_map_key_here"         # PowerShell
    ```
 3. **Install dependencies:**
    ```bash
@@ -79,11 +77,11 @@ python -c "import pandas as pd; a=pd.read_csv('data/firms_early.csv'); b=pd.read
 python src/eda.py --input data/firms_combined.csv --outdir data/plots
 ```
 
-### Catatan penting
+### Catatan :
 
 - **Rate limit FIRMS**: max **5 hari per request** (bukan 10 seperti dokumentasi
   lama) - `fetch_firms.py` sudah menangani ini otomatis lewat chunking.
-- **Sensor NRT vs SP**: data "near real-time" (NRT) cuma tersedia ~60 hari
+- **Sensor NRT vs SP**: data "near real-time" (NRT) cuma tersedia 60 hari
   terakhir; untuk data lebih lama wajib pakai sensor "_SP" (archive), yang
   punya lag publikasi beberapa bulan.
 - **User-Agent header wajib** - beberapa environment (khususnya PowerShell
@@ -101,8 +99,7 @@ python src/eda.py --input data/firms_combined.csv --outdir data/plots
 
 ## Tahap 2: Deteksi Burn Scar dari Citra Satelit (Sentinel-2)
 
-Daripada memproses seluruh Kalimantan (berat dan tidak perlu untuk skala
-portofolio), pendekatannya adalah **studi kasus**: ambil satu klaster
+Daripada memproses seluruh Kalimantan, pendekatannya adalah **studi kasus**: ambil satu klaster
 hotspot terpadat dari Tahap 1, lalu bandingkan citra Sentinel-2 sebelum vs
 sesudah periode kebakaran menggunakan **dNBR (delta Normalized Burn Ratio)**
 - metode standar remote sensing (dipakai USGS, UN-SPIDER) untuk memetakan
@@ -110,14 +107,12 @@ area terbakar dan tingkat keparahannya.
 
 ### Setup tambahan
 
-1. **Daftar Google Earth Engine** (gratis, tier "Community" - tidak perlu
-   billing account): https://code.earthengine.google.com/register
-   Catat **Project ID** Google Cloud yang dipakai saat registrasi.
+1. **Daftar Google Earth Engine** (tier "Community")
 2. **Install dependency:**
    ```bash
    pip install earthengine-api geemap --break-system-packages
    ```
-3. **Autentikasi** (sekali saja, buka browser untuk login):
+3. **Autentikasi**:
    ```bash
    earthengine authenticate --auth_mode=notebook
    ```
@@ -174,20 +169,19 @@ python src/validate_with_hotspots.py \
 | Tinggi | 526 | 4,3% |
 | **Terkonfirmasi (≥1)** | **6.160** | **49,9%** |
 
-### Catatan & keterbatasan penting
+### Catatan & keterbatasan 
 
 - **Asap = musuh ganda**: di puncak musim kebakaran, citra satelit sendiri
   sering tertutup asap tebal (bukan cuma awan biasa), sehingga `--max-cloud-pct`
-  perlu dinaikkan cukup tinggi (kami pakai 80%) untuk tetap mendapat citra.
-  Ini ironi yang menarik dicatat: makin parah kebakarannya, makin sulit
-  memvalidasinya lewat citra optik.
+  perlu dinaikkan cukup tinggi (saya pakai 80%) untuk tetap mendapat citra.
+  means: makin parah kebakarannya, makin sulit memvalidasinya lewat citra optik.
 - **~50% tingkat konfirmasi itu wajar**, bukan tanda kegagalan - FIRMS
   mendeteksi panas *real-time* per piksel ~375m-1km, sementara dNBR
   mendeteksi perubahan *permanen* pasca-kebakaran pada resolusi 10-20m. Ada
   lag alami dan perbedaan resolusi antara keduanya.
-- **Artefak tile & false-positive**: peta severity mentah menunjukkan garis
+- **Artefak tile & false-positive**: severity map mentah menunjukkan garis
   sambungan antar-tile Sentinel-2 dan beberapa bentuk geometris tajam
-  (kemungkinan tambak/area pertanian yang berubah, bukan kebakaran). Untuk
+  (tambak/area pertanian yang berubah, bukan kebakaran). Untuk
   analisis produksi, ini perlu di-mask lebih lanjut.
 - **Blob melingkar rapi berwarna abu-abu ("tidak terbakar")** di scatter
   plot validasi kemungkinan adalah badan air atau area industri - sumber
@@ -198,19 +192,8 @@ python src/validate_with_hotspots.py \
 
 ---
 
-## Roadmap selanjutnya
+## Log debugging
 
-3. **Feature engineering**: gabungkan hotspot historis + data cuaca BMKG
-   (curah hujan, kelembapan) + tinggi muka air gambut
-4. **Model prediksi risiko kebakaran** harian per kabupaten (XGBoost/LightGBM,
-   atau LSTM untuk pendekatan time-series penuh) - divalidasi dengan burn
-   scar Tahap 2 sebagai ground truth tambahan
-5. (Opsional) Dashboard interaktif (Streamlit) untuk visualisasi peta risiko
-
-## Tantangan teknis yang diselesaikan (log debugging)
-
-Beberapa isu nyata yang muncul & diperbaiki selama pengembangan - dicatat
-di sini karena mencerminkan proses debugging end-to-end yang sesungguhnya:
 
 - Batas `day_range` FIRMS API ternyata 5 hari, bukan 10 seperti asumsi awal
   → fix di `config.py`.
@@ -226,12 +209,12 @@ di sini karena mencerminkan proses debugging end-to-end yang sesungguhnya:
 - `sampleRegions().getInfo()` Earth Engine dibatasi 5.000 elemen per
   panggilan → `validate_with_hotspots.py` memproses per-batch.
 
-## Sumber data
+## Data
 
 - [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/) — hotspot kebakaran aktif
 - [Copernicus Sentinel-2](https://sentinels.copernicus.eu/) via
   [Google Earth Engine](https://earthengine.google.com/) — citra optik untuk
   deteksi burn scar
-- [BMKG](https://www.bmkg.go.id/) — data cuaca/iklim (untuk tahap selanjutnya)
+- [BMKG](https://www.bmkg.go.id/) — data cuaca/iklim (next step euy hehe)
 - [SIPONGI Kementerian Kehutanan](https://sipongi.menlhk.go.id/) — monitoring
-  karhutla resmi pemerintah Indonesia
+  karhutla resmi pemerintah Indonesia (ini jugak next step, nitip disini)
