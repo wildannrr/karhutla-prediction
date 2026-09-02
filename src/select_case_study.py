@@ -1,22 +1,3 @@
-"""
-select_case_study.py
-=====================
-Tahap 2, langkah 1: pilih AREA dan RENTANG TANGGAL untuk studi kasus deteksi
-burn scar. Memproses citra Sentinel-2 untuk SELURUH Kalimantan itu berat dan
-tidak perlu untuk proyek portofolio - jadi kita fokus ke satu klaster hotspot
-paling padat sebagai studi kasus yang representatif.
-
-Cara kerja:
-1. Ambil data hotspot bulan Agustus (puncak eskalasi berdasarkan Tahap 1).
-2. Bagi wilayah jadi grid 0.5 x 0.5 derajat (~55km x 55km).
-3. Cari grid cell dengan jumlah hotspot terbanyak -> ini jadi AOI kita.
-4. Tentukan rentang tanggal "sebelum" (awal Agustus, sedikit hotspot) dan
-   "sesudah" (akhir Agustus, banyak hotspot) untuk perbandingan Sentinel-2.
-
-Run:
-    python src/select_case_study.py --input data/firms_kalimantan_2026_combined.csv
-"""
-
 import argparse
 import pandas as pd
 
