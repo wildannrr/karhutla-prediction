@@ -1,0 +1,15 @@
+Case study bbox: 113.600,-2.400,114.400,-1.600
+Before: 2026-07-12 - 2026-07-27
+After:  2026-08-25 - 2026-09-15
+
+Luas area per tingkat keparahan (hektare):
+  Tidak terbakar: 633,500.6 ha
+  Rendah: 99,520.5 ha
+  Sedang-rendah: 36,761.9 ha
+  Sedang-tinggi: 14,533.3 ha
+  Tinggi: 3,006.6 ha
+
+Total area terbakar: 153,822.2 ha
+
+Thumbnail URL:
+https://earthengine.googleapis.com/v1/projects/first-prpoject-507314/thumbnails/653aa1d43af8e0dbe1de2082d31117da-4d78dc76b821b4ab1a9e826b8ff6c0dc:getPixels
