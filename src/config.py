@@ -1,33 +1,6 @@
-"""
-Config: bounding boxes and constants for the Kalimantan karhutla (forest & land fire)
-prediction project.
-
-Province bounding boxes are APPROXIMATE rectangles (not precise administrative
-boundaries). They're good enough to tag a hotspot with a likely province for
-exploratory analysis. For anything that needs precise boundaries (e.g. area
-statistics per kabupaten), swap this out for a real shapefile/GeoJSON and do a
-proper spatial join with geopandas.
-"""
-
 # Whole-Kalimantan bounding box: (west, south, east, north)
 KALIMANTAN_BBOX = (108.0, -4.5, 119.5, 4.5)
 
-# Rough per-province bounding boxes (west, south, east, north).
-# Real province borders are irregular polygons, not rectangles, so these
-# WILL misclassify some points near borders. Good enough for exploratory
-# analysis; for anything that needs to be precise, replace this with a
-# real GeoJSON/shapefile (e.g. from Indonesia's Badan Informasi Geospasial)
-# and do a proper point-in-polygon spatial join with geopandas instead.
-#
-# Dict order matters: more distinctive/smaller boxes are listed first and
-# checked first, since a point can fall inside more than one rectangle.
-#
-# NOTE: because the fetch bbox (KALIMANTAN_BBOX) covers the whole island of
-# Borneo geographically, it also picks up real hotspots in Malaysian Borneo
-# (Sarawak/Sabah) and Brunei, which are NOT Indonesian provinces. Those are
-# deliberately NOT force-fit into an Indonesian province box below - they
-# get tagged "Malaysia/Brunei (Borneo)" by tag_province() instead of being
-# silently misclassified.
 PROVINCE_BBOXES = {
     "Kalimantan Selatan": (114.3, -4.4, 116.3, -1.2),
     "Kalimantan Utara":   (115.5, 1.7, 119.5, 4.5),
