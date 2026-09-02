@@ -1,3 +1,5 @@
+# quick exploratory analysis on the FIRMS hotspot CSV produced by fetch_firms.py
+
 import argparse
 import os
 
