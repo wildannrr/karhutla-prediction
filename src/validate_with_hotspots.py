@@ -1,32 +1,3 @@
-"""
-validate_with_hotspots.py
-==========================
-Tahap 2, langkah 3: VALIDASI. Kita punya dua sumber deteksi kebakaran yang
-independen - hotspot termal FIRMS (Tahap 1) dan perubahan spektral Sentinel-2
-dNBR (Tahap 2). Kalau keduanya saling mengkonfirmasi (hotspot FIRMS berada
-di piksel yang juga terdeteksi "berubah" oleh Sentinel-2), itu bukti kuat
-deteksinya valid - bukan cuma artefak citra (garis sambungan tile, perubahan
-lahan non-kebakaran, dsb).
-
-Cara kerja:
-1. Filter titik hotspot FIRMS yang berada di dalam AOI dan periode yang sama
-   dengan studi kasus burn_detection.py.
-2. "Sample" nilai severity Sentinel-2 tepat di lokasi masing-masing hotspot.
-3. Hitung: dari semua hotspot ini, berapa persen yang jatuh di piksel dengan
-   severity terdeteksi (>=1) vs yang jatuh di piksel "tidak terbakar" (0).
-4. Buat scatter plot hotspot berwarna sesuai severity yang di-sample, untuk
-   inspeksi visual overlap-nya.
-
-Run:
-    python src/validate_with_hotspots.py \
-        --input data/firms_kalimantan_2026_combined.csv \
-        --bbox 113.600,-2.400,114.400,-1.600 \
-        --before-start 2026-07-12 --before-end 2026-07-27 \
-        --after-start 2026-08-25 --after-end 2026-09-15 \
-        --project first-prproject-507314 \
-        --max-cloud-pct 80
-"""
-
 import argparse
 import os
 import sys
