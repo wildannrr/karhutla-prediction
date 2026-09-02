@@ -1,33 +1,3 @@
-"""
-fetch_firms.py
-==============
-Pull NASA FIRMS active-fire hotspot data for Kalimantan and save it as a
-tidy CSV, ready for exploratory analysis / feature engineering.
-
-Setup
------
-1. Get a FREE MAP_KEY: https://firms.modaps.eosdis.nasa.gov/api/map_key/
-2. Set it as an environment variable so it's never hardcoded in the script:
-
-       export FIRMS_MAP_KEY="your_map_key_here"
-
-3. Install deps:  pip install -r requirements.txt --break-system-packages
-4. Run:            python src/fetch_firms.py --start 2026-01-01 --end 2026-08-30 --archive
-
-Notes on FIRMS' Area API
--------------------------
-- One request returns at most 10 days of data (`MAX_DAY_RANGE`), counted
-  backwards from the given `date`. So for anything longer than 10 days we
-  loop over 10-day chunks and concatenate.
-- "_NRT" sensors only have roughly the last ~60 days of data available.
-  For older dates use the "_SP" (standard/archive) sensors instead
-  (pass --archive), which are science-quality but published with a lag.
-- Free MAP_KEYs are rate-limited to 5,000 transactions / 10 minutes, so a
-  full Jan-Aug pull (~24 chunks x a couple of sensors) is comfortably
-  within limits — no need to throttle for a project this size, but the
-  script sleeps briefly between calls to be a polite API citizen.
-"""
-
 import argparse
 import os
 import sys
