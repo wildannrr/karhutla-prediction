@@ -1,11 +1,3 @@
-"""
-gee_utils.py
-============
-Fungsi-fungsi Earth Engine yang dipakai bersama oleh burn_detection.py dan
-validate_with_hotspots.py, supaya logikanya konsisten di kedua script dan
-tidak duplikat.
-"""
-
 import ee
 
 
