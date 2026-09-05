@@ -1,0 +1,14 @@
+requests>=2.31
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.12
+folium>=0.15
+
+# Tahap 2: deteksi burn scar (citra satelit)
+earthengine-api>=0.1.400
+geemap>=0.32
+
+# Tahap 4: model prediksi risiko kebakaran
+xgboost>=2.0
+scikit-learn>=1.3
+joblib>=1.3
